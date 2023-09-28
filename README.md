@@ -42,3 +42,33 @@ ORDER BY sum_of_payments DESC
 LIMIT 1;
 ```
 ![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db7.png)
+
+### Задание 4*
+
+Посчитайте количество продаж, выполненных каждым продавцом. Добавьте вычисляемую колонку «Премия». Если количество продаж превышает 8000, то значение в колонке будет «Да», иначе должно быть значение «Нет».
+
+```sql2
+SELECT CONCAT_WS(" ", staff.first_name, staff.last_name) as employee, COUNT(payment.payment_id) AS employee_sales, 
+CASE
+WHEN COUNT(payment.payment_id) > 8000 
+THEN 'Yes'
+ELSE 'No'
+END AS 'bonus_payment'
+FROM payment
+JOIN staff ON payment.staff_id = staff.staff_id
+GROUP BY employee;
+```
+![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db8.png)
+
+### Задание 5*
+
+Найдите фильмы, которые ни разу не брали в аренду.
+
+```sql2
+SELECT film.film_id, film.title, rental.rental_id
+FROM film
+LEFT JOIN inventory ON film.film_id = inventory.film_id
+LEFT JOIN rental ON inventory.inventory_id = rental.inventory_id
+WHERE rental.rental_id IS NULL;
+```
+![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db9.png)
