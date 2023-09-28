@@ -9,10 +9,36 @@
 - город нахождения магазина;
 - количество пользователей, закреплённых в этом магазине.
 
+```sql2
+SELECT CONCAT_WS(" ", staff.first_name, staff.last_name) AS employee, city.city AS town, COUNT(customer.customer_id) AS customer_count
+FROM store
+JOIN staff ON store.store_id = staff.store_id
+JOIN customer ON store.store_id = customer.store_id
+JOIN address ON store.address_id = address.address_id
+JOIN city ON address.city_id = city.city_id
+GROUP BY employee, town
+HAVING customer_count > 300; 
+```
+![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db5.png)
+
 ### Задание 2
 
 Получите количество фильмов, продолжительность которых больше средней продолжительности всех фильмов.
 
+```sql2
+SELECT COUNT(film_id) FROM film WHERE length > (SELECT AVG(length) FROM film);
+```
+![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db6.png)
+
 ### Задание 3
 
 Получите информацию, за какой месяц была получена наибольшая сумма платежей, и добавьте информацию по количеству аренд за этот месяц.
+
+```sql2
+SELECT SUM(payment.amount) as sum_of_payments, DATE_FORMAT(payment.payment_date, '%m.%Y') AS month_of_payments, COUNT(payment.rental_id) AS rental_count
+FROM payment
+GROUP BY month_of_payments
+ORDER BY sum_of_payments DESC
+LIMIT 1;
+```
+![sql2](https://github.com/OhotinDY/sdb-12-04/blob/main/db7.png)
